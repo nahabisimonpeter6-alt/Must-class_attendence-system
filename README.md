@@ -65,5 +65,4 @@ Import `postman/must-attendance.postman_collection.json`, run the folders in ord
 | 10 | Rukundo Joshua | 2025/BSE/157/PS | Postman collection and test data | feature/postman |
 | 11 | Kwagala Everest | 2025/BSE/242/PS | Proposal, README and presentation | feature/docs |
 
-Each member opens a pull request from their own branch.
-# Must-class_attendence-system
+Each member opened a pull request from their own branch.
