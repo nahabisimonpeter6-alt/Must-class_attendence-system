@@ -57,7 +57,7 @@ Run the automated tests (no database needed):
 npm test
 ```
 
-This covers the attendance percentage/threshold logic, JWT authentication, and that the app boots and serves the health check. GitHub Actions runs the same suite on every push and pull request (see `.github/workflows/ci.yml`).
+This covers the attendance percentage/threshold logic, JWT authentication, and that the app boots and serves the health check.
 
 ## Team responsibilities
 | # | Name | Reg No. | Responsibility | Branch / PR |
