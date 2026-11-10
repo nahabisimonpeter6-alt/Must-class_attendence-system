@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MUST Class Attendance</title>
+<style>
+  :root {
+    --bg: #f4f5f2; --card: #ffffff; --ink: #1c2b39; --muted: #5d6b78;
+    --brand: #0f5c4d; --brand-ink: #ffffff; --warn: #a4580b; --warn-bg: #fdf0df;
+    --ok-bg: #e3f2ec; --line: #d8ddd9; --err: #a32020;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #131a20; --card: #1b252e; --ink: #e8edf1; --muted: #9aa8b4;
+      --brand: #4cb89f; --brand-ink: #0c1a16; --warn: #f0a95c; --warn-bg: #3a2a15;
+      --ok-bg: #173229; --line: #2c3a46; --err: #ff8a8a; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.5 Georgia, "Times New Roman", serif; }
+  header { padding: 20px 16px 12px; border-bottom: 3px solid var(--brand); background: var(--card); }
+  header h1 { margin: 0; font-size: 1.3rem; }
+  header p { margin: 2px 0 0; color: var(--muted); font-family: system-ui, sans-serif; font-size: .9rem; }
+  main { max-width: 760px; margin: 0 auto; padding: 16px; font-family: system-ui, sans-serif; }
+  section { background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+    padding: 16px; margin-bottom: 16px; }
+  h2 { font: 700 1.05rem Georgia, serif; margin: 0 0 12px; }
+  label { display: block; font-size: .85rem; color: var(--muted); margin: 10px 0 4px; }
+  input, select { width: 100%; padding: 10px; font-size: 1rem; border: 1px solid var(--line);
+    border-radius: 4px; background: var(--bg); color: var(--ink); }
+  button { margin-top: 12px; padding: 10px 16px; font-size: 1rem; border: 0; border-radius: 4px;
+    background: var(--brand); color: var(--brand-ink); cursor: pointer; font-weight: 600; }
+  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); }
+  button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--warn); outline-offset: 2px; }
+  .row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--line); }
+  .row:last-child { border-bottom: 0; }
+  .row .who { flex: 1; } .row .who small { display: block; color: var(--muted); }
+  .row select { width: 120px; }
+  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  th, td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+  .pill { padding: 2px 8px; border-radius: 10px; font-size: .8rem; font-weight: 600; }
+  .pill.ok { background: var(--ok-bg); color: var(--brand); }
+  .pill.low { background: var(--warn-bg); color: var(--warn); }
+  #msg { padding: 10px 12px; border-radius: 4px; margin-bottom: 16px; display: none; }
+  #msg.ok { display: block; background: var(--ok-bg); color: var(--brand); }
+  #msg.err { display: block; background: var(--warn-bg); color: var(--err); }
+  .top { display: flex; justify-content: space-between; align-items: center; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Class Attendance</h1>
+  <p>Mbarara University of Science and Technology, Academic Registrar</p>
+</header>
+<main>
+  <div id="msg" role="status"></div>
+
+  <section id="loginBox">
+    <h2>Log in</h2>
+    <label for="email">Email</label>
+    <input id="email" type="email" value="lecturer@must.ac.ug" autocomplete="username">
+    <label for="password">Password</label>
+    <input id="password" type="password" value="password123" autocomplete="current-password">
+    <button id="loginBtn">Log in</button>
+  </section>
+
+  <div id="app" class="hidden">
+    <section>
+      <div class="top"><strong id="who"></strong><button class="ghost" id="logoutBtn" style="margin:0">Log out</button></div>
+    </section>
+
+    <div id="lecturerView" class="hidden">
+      <section>
+        <h2>Course</h2>
+        <label for="courseSelect">Choose a course</label>
+        <select id="courseSelect"></select>
+      </section>
+      <section>
+        <h2>Open a class session</h2>
+        <label for="topic">Topic</label>
+        <input id="topic" placeholder="e.g. Express routing">
+        <label for="date">Date</label>
+        <input id="date" type="date">
+        <button id="createSessionBtn">Open session</button>
+      </section>
+      <section>
+        <h2>Mark attendance</h2>
+        <label for="sessionSelect">Session</label>
+        <select id="sessionSelect"></select>
+        <div id="roster"></div>
+        <button id="saveAttBtn">Save attendance</button>
+      </section>
+      <section>
+        <h2>Course report</h2>
+        <button id="reportBtn" style="margin-top:0">Load report</button>
+        <div id="report"></div>
+      </section>
+    </div>
+
+    <div id="studentView" class="hidden">
+      <section>
+        <h2>My attendance</h2>
+        <div id="myAttendance"></div>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+const API = '/api';
+let token = null, user = null, courses = [], sessions = [];
+const $ = (id) => document.getElementById(id);
+
+function say(text, type) { const m = $('msg'); m.textContent = text; m.className = type; }
+function clearMsg() { $('msg').className = ''; $('msg').style.display = 'none'; }
+
+async function api(path, method = 'GET', body) {
+  const res = await fetch(API + path, {
+    method,
+    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    const detail = data.errors ? ' ' + data.errors.map((e) => e.message).join(' ') : '';
+    throw new Error((data.message || 'Request failed.') + detail);
+  }
+  return data;
+}
+
+$('loginBtn').onclick = async () => {
+  try {
+    const d = await api('/auth/login', 'POST', { email: $('email').value, password: $('password').value });
+    token = d.token; user = d.user; clearMsg();
+    $('loginBox').classList.add('hidden'); $('app').classList.remove('hidden');
+    $('who').textContent = user.name + ' (' + user.role + ')';
+    if (user.role === 'lecturer') { $('lecturerView').classList.remove('hidden'); await loadCourses(); }
+    else { $('studentView').classList.remove('hidden'); await loadMine(); }
+  } catch (e) { say(e.message, 'err'); }
+};
+
+$('logoutBtn').onclick = () => location.reload();
+
+async function loadCourses() {
+  const d = await api('/courses');
+  courses = d.data;
+  $('courseSelect').innerHTML = courses.length
+    ? courses.map((c) => `<option value="${c._id}">${c.code} ${c.name}</option>`).join('')
+    : '<option value="">No courses yet. Create one with the API.</option>';
+  $('courseSelect').onchange = loadSessions;
+  await loadSessions();
+}
+
+async function loadSessions() {
+  const id = $('courseSelect').value;
+  if (!id) { $('sessionSelect').innerHTML = ''; $('roster').innerHTML = ''; return; }
+  const d = await api(`/courses/${id}/sessions`);
+  sessions = d.data;
+  $('sessionSelect').innerHTML = sessions.length
+    ? sessions.map((s) => `<option value="${s._id}">${new Date(s.date).toLocaleDateString()} ${s.topic}</option>`).join('')
+    : '<option value="">No sessions yet</option>';
+  renderRoster();
+}
+
+function renderRoster() {
+  const c = courses.find((x) => x._id === $('courseSelect').value);
+  $('roster').innerHTML = c ? c.students.map((s) => `
+    <div class="row" data-id="${s._id}">
+      <div class="who">${s.name}<small>${s.regNumber || ''}</small></div>
+      <select aria-label="Status for ${s.name}">
+        <option>present</option><option>late</option><option>absent</option>
+      </select>
+    </div>`).join('') : '';
+}
+
+$('createSessionBtn').onclick = async () => {
+  try {
+    await api('/sessions', 'POST', { courseId: $('courseSelect').value, topic: $('topic').value, date: $('date').value });
+    say('Session opened.', 'ok'); $('topic').value = ''; await loadSessions();
+  } catch (e) { say(e.message, 'err'); }
+};
+
+$('saveAttBtn').onclick = async () => {
+  try {
+    const records = [...document.querySelectorAll('#roster .row')].map((r) => ({
+      studentId: r.dataset.id, status: r.querySelector('select').value
+    }));
+    const d = await api(`/sessions/${$('sessionSelect').value}/attendance`, 'POST', { records });
+    say(d.message, 'ok');
+  } catch (e) { say(e.message, 'err'); }
+};
+
+$('reportBtn').onclick = async () => {
+  try {
+    const d = await api(`/courses/${$('courseSelect').value}/report`);
+    $('report').innerHTML = `<p>${d.totalSessions} sessions held. Threshold: ${d.threshold}%.</p>
+      <table><tr><th>Student</th><th>Attended</th><th>%</th><th>Status</th></tr>` +
+      d.data.map((r) => `<tr><td>${r.name}<br><small>${r.regNumber || ''}</small></td>
+        <td>${r.attended}/${r.totalSessions}</td><td>${r.percentage}%</td>
+        <td><span class="pill ${r.belowThreshold ? 'low' : 'ok'}">${r.belowThreshold ? 'Below threshold' : 'Eligible'}</span></td></tr>`).join('') +
+      '</table>';
+  } catch (e) { say(e.message, 'err'); }
+};
+
+async function loadMine() {
+  try {
+    const d = await api(`/students/${user.id}/attendance`);
+    $('myAttendance').innerHTML = '<table><tr><th>Course</th><th>Attended</th><th>%</th><th>Status</th></tr>' +
+      d.data.map((r) => `<tr><td>${r.course.code}<br><small>${r.course.name}</small></td>
+        <td>${r.attended}/${r.totalSessions}</td><td>${r.percentage}%</td>
+        <td><span class="pill ${r.belowThreshold ? 'low' : 'ok'}">${r.belowThreshold ? 'Below ' + d.threshold + '%' : 'Eligible'}</span></td></tr>`).join('') + '</table>';
+  } catch (e) { say(e.message, 'err'); }
+}
+
+$('date').valueAsDate = new Date();
+</script>
+</body>
+</html>

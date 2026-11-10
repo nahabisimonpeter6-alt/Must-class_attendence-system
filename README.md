@@ -51,15 +51,19 @@ Responses always use `{ success, message?, data?, errors? }`. Status codes: 200/
 Import `postman/must-attendance.postman_collection.json`, run the folders in order 1 to 4 (or use the Collection Runner). Each request has tests, and tokens/ids are saved automatically.
 
 ## Team responsibilities
-| Member | Responsibility | Branch / PR |
-|---|---|---|
-| Member 1 | Auth, roles, JWT middleware | feature/auth |
-| Member 2 | Courses and enrollment | feature/courses |
-| Member 3 | Sessions and attendance marking | feature/attendance |
-| Member 4 | Reports and student view | feature/reports |
-| Member 5 | Frontend, Postman, README | feature/frontend-docs |
+| # | Name | Reg No. | Responsibility | Branch / PR |
+|---|---|---|---|---|
+| 1 | Tinyefunza Derick | 2025/BSE/173/PS | Team lead, GitHub repo, reviewing and merging PRs | feature/project-setup |
+| 2 | Asingura Faizal | 2025/BSE/044/PS | Login, JWT and role middleware | feature/auth |
+| 3 | Enyang Mark | 2025/BSE/204/PS | MongoDB Atlas, models, seed script | feature/database |
+| 4 | Kizza Jessy Mitembo | 2025/BSE/094/PS | Courses and enrollment routes | feature/courses |
+| 5 | Muhairwe Andrew | 2025/BSE/110/PS | Class session routes | feature/sessions |
+| 6 | Ainamaani Bright | 2025/BSE/001 | Attendance marking and duplicate checks | feature/attendance |
+| 7 | Murungi Collins | 2025/BSE/003 | Course report and 75% threshold logic | feature/reports |
+| 8 | Sserwanga Adrian Josephat | 2025/BSE/168/PS | Student attendance endpoint and error handling | feature/student-view |
+| 9 | Nahabi Simon Peter | 2025/BSE/004 | Frontend page | feature/frontend |
+| 10 | Rukundo Joshua | 2025/BSE/157/PS | Postman collection and test data | feature/postman |
+| 11 | Kwagala Everest | 2025/BSE/242/PS | Proposal, README and presentation | feature/docs |
 
 Each member opens a pull request from their own branch.
-# Must_attendence-website
-# Must_attendence-website
-# Must_attendence-website
+# Must-class_attendence-system
