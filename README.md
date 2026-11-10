@@ -50,6 +50,15 @@ Responses always use `{ success, message?, data?, errors? }`. Status codes: 200/
 ## Postman
 Import `postman/must-attendance.postman_collection.json`, run the folders in order 1 to 4 (or use the Collection Runner). Each request has tests, and tokens/ids are saved automatically.
 
+## Testing
+Run the automated tests (no database needed):
+
+```bash
+npm test
+```
+
+This covers the attendance percentage/threshold logic, JWT authentication, and that the app boots and serves the health check.
+
 ## Team responsibilities
 | # | Name | Reg No. | Responsibility | Branch / PR |
 |---|---|---|---|---|

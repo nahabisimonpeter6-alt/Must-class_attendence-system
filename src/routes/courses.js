@@ -6,6 +6,7 @@ const Session = require('../models/Session');
 const Attendance = require('../models/Attendance');
 const validate = require('../middleware/validate');
 const { authenticate, requireRole } = require('../middleware/auth');
+const { attendancePercentage, isBelowThreshold } = require('../utils/attendance');
 
 const THRESHOLD = () => Number(process.env.ATTENDANCE_THRESHOLD) || 75;
 
@@ -97,7 +98,7 @@ router.get(
       const report = course.students.map((s) => {
         const mine = records.filter((r) => String(r.student) === String(s._id));
         const attended = mine.filter((r) => r.status === 'present' || r.status === 'late').length;
-        const percentage = totalSessions ? Math.round((attended / totalSessions) * 100) : 0;
+        const percentage = attendancePercentage(attended, totalSessions);
         return {
           studentId: s._id,
           name: s.name,
@@ -105,7 +106,7 @@ router.get(
           attended,
           totalSessions,
           percentage,
-          belowThreshold: totalSessions > 0 && percentage < threshold
+          belowThreshold: totalSessions > 0 && isBelowThreshold(percentage, threshold)
         };
       });
 
