@@ -5,6 +5,7 @@ const Session = require('../models/Session');
 const Attendance = require('../models/Attendance');
 const validate = require('../middleware/validate');
 const { authenticate } = require('../middleware/auth');
+const { attendancePercentage, isBelowThreshold } = require('../utils/attendance');
 
 // GET /api/students/:id/attendance - students see only their own; lecturers can see any
 router.get(
@@ -28,11 +29,11 @@ router.get(
         const total = await Session.countDocuments({ course: c._id });
         const recs = await Attendance.find({ course: c._id, student: req.params.id });
         const attended = recs.filter((r) => r.status !== 'absent').length;
-        const percentage = total ? Math.round((attended / total) * 100) : 0;
+        const percentage = attendancePercentage(attended, total);
         summary.push({
           course: { id: c._id, code: c.code, name: c.name },
           attended, totalSessions: total, percentage,
-          belowThreshold: total > 0 && percentage < threshold
+          belowThreshold: total > 0 && isBelowThreshold(percentage, threshold)
         });
       }
       res.json({ success: true, threshold, data: summary });
