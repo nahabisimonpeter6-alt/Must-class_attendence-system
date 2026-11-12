@@ -1,4 +1,5 @@
 # MUST Class Attendance System
+ by Group H
 
 SWE2106 Etivity 5. A digital class-attendance system for the Academic Registrar, Mbarara University of Science and Technology.
 
