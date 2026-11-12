@@ -70,7 +70,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"lecturer@must.ac.ug\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"username\": \"lecturer\",\n  \"password\": \"password123\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -118,7 +118,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"derick@must.ac.ug\",\n  \"password\": \"2025/BSE/173/PS\"\n}",
+              "raw": "{\n  \"username\": \"2025/BSE/173/PS\",\n  \"password\": \"2025/BSE/173/PS\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -164,7 +164,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"lecturer@must.ac.ug\",\n  \"password\": \"wrong\"\n}",
+              "raw": "{\n  \"username\": \"lecturer\",\n  \"password\": \"wrong\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -210,7 +210,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"not-an-email\"\n}",
+              "raw": "{\n  \"username\": \"\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -225,6 +225,165 @@
               "path": [
                 "auth",
                 "login"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update account (wrong current password)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 401', () => pm.response.to.have.status(401));",
+                  "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"wrong\",\n  \"newUsername\": \"derick.t\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "account"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update account (nothing to change)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 400', () => pm.response.to.have.status(400));",
+                  "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"2025/BSE/173/PS\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "account"
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update account (username taken)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 409', () => pm.response.to.have.status(409));",
+                  "pm.test('success is false', () => pm.expect(pm.response.json().success).to.eql(false));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{studentToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"currentPassword\": \"2025/BSE/173/PS\",\n  \"newUsername\": \"lecturer\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/account",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "account"
               ]
             }
           }

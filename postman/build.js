@@ -34,20 +34,32 @@ const collection = {
   item: [
     { name: '1. Auth', item: [
       req('Login lecturer (valid)', 'POST', '/auth/login', {
-        body: { email: 'lecturer@must.ac.ug', password: 'password123' },
+        body: { username: 'lecturer', password: 'password123' },
         tests: [status(200), ok, "pm.collectionVariables.set('lecturerToken', pm.response.json().token);"]
       }),
       req('Login student (valid)', 'POST', '/auth/login', {
-        body: { email: 'derick@must.ac.ug', password: '2025/BSE/173/PS' },
+        body: { username: '2025/BSE/173/PS', password: '2025/BSE/173/PS' },
         tests: [status(200), ok,
           "pm.collectionVariables.set('studentToken', pm.response.json().token);",
           "pm.collectionVariables.set('student1Id', pm.response.json().user.id);"]
       }),
       req('Login (wrong password)', 'POST', '/auth/login', {
-        body: { email: 'lecturer@must.ac.ug', password: 'wrong' }, tests: [status(401), bad]
+        body: { username: 'lecturer', password: 'wrong' }, tests: [status(401), bad]
       }),
       req('Login (missing fields)', 'POST', '/auth/login', {
-        body: { email: 'not-an-email' }, tests: [status(400), bad]
+        body: { username: '' }, tests: [status(400), bad]
+      }),
+      req('Update account (wrong current password)', 'PUT', '/auth/account', {
+        auth: 'studentToken',
+        body: { currentPassword: 'wrong', newUsername: 'derick.t' }, tests: [status(401), bad]
+      }),
+      req('Update account (nothing to change)', 'PUT', '/auth/account', {
+        auth: 'studentToken',
+        body: { currentPassword: '2025/BSE/173/PS' }, tests: [status(400), bad]
+      }),
+      req('Update account (username taken)', 'PUT', '/auth/account', {
+        auth: 'studentToken',
+        body: { currentPassword: '2025/BSE/173/PS', newUsername: 'lecturer' }, tests: [status(409), bad]
       })
     ]},
     { name: '2. Courses', item: [

@@ -2,7 +2,7 @@
 
 SWE2106 Etivity 5. A digital class-attendance system for the Academic Registrar, Mbarara University of Science and Technology.
 
-## Problem faced
+## Problem
 Paper registers waste lecture time, allow proxy sign-ins, and make it hard to see who has fallen below the attendance threshold needed for exam eligibility.
 
 ## Users
@@ -15,10 +15,10 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 3. Flag students below the threshold (default 75%) automatically.
 
 ## Scope
-**In:** login with roles (JWT), courses with enrolled students, class sessions, attendance marking, per-student and per-course reports, simple web page.
-**Out (future work):** QR or biometric check-in, SMS alerts, admin role, password reset.
+**In:** login with roles (JWT) using a username (students: registration number), changing username and password, , courses with enrolled students, class sessions, attendance marking, per-student and per-course reports, simple web page.
+**Out (future work):** QR or biometric check-in, SMS alerts, admin role, password reset by email.
 
-## Stack used
+## Stack
 Node.js, Express, MongoDB Atlas (Mongoose), JWT, express-validator, plain HTML/JS frontend, Postman.
 
 ## Setup
@@ -26,30 +26,32 @@ Node.js, Express, MongoDB Atlas (Mongoose), JWT, express-validator, plain HTML/J
 git clone <repo-url> && cd must-attendance
 npm install
 cp .env.example .env      # then fill in MONGO_URI and JWT_SECRET
-npm run seed              # creates demo users
+npm run seed              # creates demo users (wipes all data)
 npm start                 # http://localhost:3000
 ```
 Open `http://localhost:3000` for the frontend. API base: `http://localhost:3000/api`.
 
-**Lecturer login:** `lecturer@must.ac.ug` / `password123`
+**Lecturer login:** username `lecturer`, password `password123`
 
-**Student logins:** the team members are the students. The email is the first name and the password is the registration number.
+**Student logins:** the team members are the students. The **registration number is the username and also the first password** (the username is not case sensitive, the password is). After logging in, every student and the lecturer can change their username and password under **My account**.
 
-| Student | Email | Password (Reg No.) |
+| Student | Username (Reg No.) | First password (Reg No.) |
 |---|---|---|
-| Tinyefunza Derick | derick@must.ac.ug | 2025/BSE/173/PS |
-| Asingura Faizal | faizal@must.ac.ug | 2025/BSE/044/PS |
-| Enyang Mark | mark@must.ac.ug | 2025/BSE/204/PS |
-| Kizza Jessy Mitembo | jessy@must.ac.ug | 2025/BSE/094/PS |
-| Muhairwe Andrew | andrew@must.ac.ug | 2025/BSE/110/PS |
-| Ainamaani Bright | bright@must.ac.ug | 2025/BSE/001 |
-| Murungi Collins | collins@must.ac.ug | 2025/BSE/003 |
-| Sserwanga Adrian Josephat | adrian@must.ac.ug | 2025/BSE/168/PS |
-| Nahabi Simon Peter | simon@must.ac.ug | 2025/BSE/004 |
-| Rukundo Joshua | joshua@must.ac.ug | 2025/BSE/157/PS |
-| Kwagala Everest | everest@must.ac.ug | 2025/BSE/242/PS |
+| Tinyefunza Derick | 2025/BSE/173/PS | 2025/BSE/173/PS |
+| Asingura Faizal | 2025/BSE/044/PS | 2025/BSE/044/PS |
+| Enyang Mark | 2025/BSE/204/PS | 2025/BSE/204/PS |
+| Kizza Jessy Mitembo | 2025/BSE/094/PS | 2025/BSE/094/PS |
+| Muhairwe Andrew | 2025/BSE/110/PS | 2025/BSE/110/PS |
+| Ainamaani Bright | 2025/BSE/001 | 2025/BSE/001 |
+| Murungi Collins | 2025/BSE/003 | 2025/BSE/003 |
+| Sserwanga Adrian Josephat | 2025/BSE/168/PS | 2025/BSE/168/PS |
+| Nahabi Simon Peter | 2025/BSE/004 | 2025/BSE/004 |
+| Rukundo Joshua | 2025/BSE/157/PS | 2025/BSE/157/PS |
+| Kwagala Everest | 2025/BSE/242/PS | 2025/BSE/242/PS |
 
 Run `npm run seed` once to create these accounts (it clears and recreates all data).
+
+**Already have data and only want to switch from email login to username login?** Run `npm run migrate` instead. It keeps all users, courses, sessions and attendance, gives every user a username (students: reg number, lecturer: `lecturer`) and removes the old email index. Run it once, before deploying this version.
 
 ## Deploy to Vercel
 1. Push the repo to GitHub (`api/index.js` and `vercel.json` must be included).
@@ -61,7 +63,8 @@ Run `npm run seed` once to create these accounts (it clears and recreates all da
 ## API
 | Method | Endpoint | Role | Purpose |
 |---|---|---|---|
-| POST | /api/auth/login | any | Get a JWT |
+| POST | /api/auth/login | any | Log in with `{ username, password }`, get a JWT |
+| PUT | /api/auth/account | any (logged in) | Change own username and/or password (needs `currentPassword`) |
 | POST | /api/courses | lecturer | Create course, enrol students by reg number |
 | GET | /api/courses | any | List my courses |
 | GET | /api/courses/:id/sessions | lecturer | List sessions |
