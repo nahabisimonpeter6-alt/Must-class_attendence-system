@@ -66,9 +66,27 @@ router.get(
   [param('id').isMongoId().withMessage('Invalid course id.')],
   validate,
   async (req, res, next) => {
-    try {
-      const sessions = await Session.find({ course: req.params.id }).sort({ date: -1 });
-      res.json({ success: true, count: sessions.length, data: sessions });
+    try {//This ensures that a lecturer dosnot retrieve another lecturer's class sessions
+      const course = await Course.findById(req.params.id);
+      if(!course){
+        return res.status(404).json({
+          succes:false,
+          message:'Course not found.'
+        });
+      }
+      if(String(course.lecturer)!==req.user.id){
+        return res.status(403).json({
+          success:false,
+          mesage:'This is not your course.'
+        });
+      }
+      const sessions = awaits Sessions.find({course:course._id})
+      .sort({date:-1});
+      res.json({
+        success:true,
+        count:sessions.length,
+        data:sessions
+      });
     } catch (err) {
       next(err);
     }
