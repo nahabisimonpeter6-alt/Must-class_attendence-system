@@ -38,7 +38,7 @@ const collection = {
         tests: [status(200), ok, "pm.collectionVariables.set('lecturerToken', pm.response.json().token);"]
       }),
       req('Login student (valid)', 'POST', '/auth/login', {
-        body: { email: 'brian@must.ac.ug', password: 'password123' },
+        body: { email: 'derick@must.ac.ug', password: '2025/BSE/173/PS' },
         tests: [status(200), ok,
           "pm.collectionVariables.set('studentToken', pm.response.json().token);",
           "pm.collectionVariables.set('student1Id', pm.response.json().user.id);"]
@@ -54,7 +54,7 @@ const collection = {
       req('Create course (valid)', 'POST', '/courses', {
         auth: 'lecturerToken',
         body: { code: 'SWE2106', name: 'Internet Technologies and Web Design',
-          studentRegNumbers: ['2023/BSE/001', '2023/BSE/002', '2023/BSE/003'] },
+          studentRegNumbers: ['2025/BSE/173/PS', '2025/BSE/044/PS', '2025/BSE/204/PS'] },
         tests: [status(201), ok, "pm.collectionVariables.set('courseId', pm.response.json().data._id);",
           "const s = pm.response.json().data.students; pm.collectionVariables.set('student1Id', s[0]); pm.collectionVariables.set('student2Id', s[1]); pm.collectionVariables.set('student3Id', s[2]);"]
       }),

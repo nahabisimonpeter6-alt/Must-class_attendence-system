@@ -31,7 +31,32 @@ npm start                 # http://localhost:3000
 ```
 Open `http://localhost:3000` for the frontend. API base: `http://localhost:3000/api`.
 
-Demo logins (password `password123`): `lecturer@must.ac.ug`, `brian@must.ac.ug`, `grace@must.ac.ug`, `peter@must.ac.ug`.
+**Lecturer login:** `lecturer@must.ac.ug` / `password123`
+
+**Student logins:** the team members are the students. The email is the first name and the password is the registration number.
+
+| Student | Email | Password (Reg No.) |
+|---|---|---|
+| Tinyefunza Derick | derick@must.ac.ug | 2025/BSE/173/PS |
+| Asingura Faizal | faizal@must.ac.ug | 2025/BSE/044/PS |
+| Enyang Mark | mark@must.ac.ug | 2025/BSE/204/PS |
+| Kizza Jessy Mitembo | jessy@must.ac.ug | 2025/BSE/094/PS |
+| Muhairwe Andrew | andrew@must.ac.ug | 2025/BSE/110/PS |
+| Ainamaani Bright | bright@must.ac.ug | 2025/BSE/001 |
+| Murungi Collins | collins@must.ac.ug | 2025/BSE/003 |
+| Sserwanga Adrian Josephat | adrian@must.ac.ug | 2025/BSE/168/PS |
+| Nahabi Simon Peter | simon@must.ac.ug | 2025/BSE/004 |
+| Rukundo Joshua | joshua@must.ac.ug | 2025/BSE/157/PS |
+| Kwagala Everest | everest@must.ac.ug | 2025/BSE/242/PS |
+
+Run `npm run seed` once to create these accounts (it clears and recreates all data).
+
+## Deploy to Vercel
+1. Push the repo to GitHub (`api/index.js` and `vercel.json` must be included).
+2. On vercel.com choose Add New, Project, import the repo, Framework Preset: Other.
+3. Add Environment Variables: `MONGO_URI`, `JWT_SECRET`, `ATTENDANCE_THRESHOLD` (75). Redeploy after adding them.
+4. In MongoDB Atlas, Network Access must contain `0.0.0.0/0` (Vercel IPs change).
+5. Test `https://<your-app>.vercel.app/api/health`, then log in on the home page.
 
 ## API
 | Method | Endpoint | Role | Purpose |

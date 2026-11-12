@@ -118,7 +118,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"brian@must.ac.ug\",\n  \"password\": \"password123\"\n}",
+              "raw": "{\n  \"email\": \"derick@must.ac.ug\",\n  \"password\": \"2025/BSE/173/PS\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -270,7 +270,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"code\": \"SWE2106\",\n  \"name\": \"Internet Technologies and Web Design\",\n  \"studentRegNumbers\": [\n    \"2023/BSE/001\",\n    \"2023/BSE/002\",\n    \"2023/BSE/003\"\n  ]\n}",
+              "raw": "{\n  \"code\": \"SWE2106\",\n  \"name\": \"Internet Technologies and Web Design\",\n  \"studentRegNumbers\": [\n    \"2025/BSE/173/PS\",\n    \"2025/BSE/044/PS\",\n    \"2025/BSE/204/PS\"\n  ]\n}",
               "options": {
                 "raw": {
                   "language": "json"
