@@ -2,7 +2,7 @@
 
 SWE2106 Etivity 5. A digital class-attendance system for the Academic Registrar, Mbarara University of Science and Technology.
 
-## Problem
+## Problem faced
 Paper registers waste lecture time, allow proxy sign-ins, and make it hard to see who has fallen below the attendance threshold needed for exam eligibility.
 
 ## Users
@@ -18,7 +18,7 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 **In:** login with roles (JWT), courses with enrolled students, class sessions, attendance marking, per-student and per-course reports, simple web page.
 **Out (future work):** QR or biometric check-in, SMS alerts, admin role, password reset.
 
-## Stack
+## Stack used
 Node.js, Express, MongoDB Atlas (Mongoose), JWT, express-validator, plain HTML/JS frontend, Postman.
 
 ## Setup
