@@ -7,8 +7,8 @@ SWE2106 Etivity 5. A digital class-attendance system for the Academic Registrar,
 Paper registers waste lecture time, allow proxy sign-ins, and make it hard to see who has fallen below the attendance threshold needed for exam eligibility.
 
 ## Users
-- **Lecturer:** creates courses, opens class sessions, marks attendance, views reports.
-- **Student:** views their own attendance and eligibility on the system.
+- **Lecturer:** Creates courses, opens class sessions, marks attendance, views reports.
+- **Student:** Views their own attendance and eligibility on the system.
 
 ## The Objectives
 1. Cut the time spent taking attendance of students.
