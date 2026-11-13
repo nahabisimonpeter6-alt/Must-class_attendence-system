@@ -11,7 +11,7 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 - **Student:** views their own attendance and eligibility.
 
 ## Objectives
-1. Cut the time spent taking attendance.
+1. Cut the time spent taking attendance of students.
 2. Keep one reliable record with no duplicate marking.
 3. Flag students below the threshold (default 75%) automatically.
 
