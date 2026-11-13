@@ -10,12 +10,12 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 - **Lecturer:** creates courses, opens class sessions, marks attendance, views reports.
 - **Student:** views their own attendance and eligibility on the system.
 
-## Objectives
+## The Objectives
 1. Cut the time spent taking attendance of students.
 2. Keep one reliable record with no duplicate marking.
 3. Flag students below the threshold (default 75%) automatically.
 
-## Scope
+## Scope .
 **In:** login with roles (JWT) using a username (students: registration number), changing username and password, , courses with enrolled students, class sessions, attendance marking, per-student and per-course reports, simple web page.
 **Out (future work):** QR or biometric check-in, SMS alerts, admin role, password reset by email.
 
@@ -79,7 +79,7 @@ Responses always use `{ success, message?, data?, errors? }`. Status codes: 200/
 ## Postman
 Import `postman/must-attendance.postman_collection.json`, run the folders in order 1 to 4 (or use the Collection Runner). Each request has tests, and tokens/ids are saved automatically.
 
-## Team responsibilities
+## Team responsibilities (what they did)
 | # | Name | Reg No. | Responsibility | Branch / PR |
 |---|---|---|---|---|
 | 1 | Tinyefunza Derick | 2025/BSE/173/PS | Team lead, GitHub repo, reviewing and merging PRs | feature/project-setup |
