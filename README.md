@@ -22,7 +22,7 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 ## Stack
 Node.js, Express, MongoDB Atlas (Mongoose), JWT, express-validator, plain HTML/JS frontend, Postman.
 
-## Setup
+## Setup locally using
 ```bash
 git clone <repo-url> && cd must-attendance
 npm install
