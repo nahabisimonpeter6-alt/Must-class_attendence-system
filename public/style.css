@@ -1,0 +1,341 @@
+/* MUST-inspired theme: navy and gold. Change these variables to re-colour the whole app. */
+:root {
+  --navy: #14306b;
+  --navy-deep: #0d2150;
+  --gold: #e2a62b;
+  --bg: #f3f5fa;
+  --card: #ffffff;
+  --ink: #172033;
+  --muted: #5a6577;
+  --line: #d7ddea;
+  --ok: #17724a;
+  --ok-bg: #e2f3ea;
+  --warn: #9a4b05;
+  --warn-bg: #fdefd8;
+  --err: #a12525;
+  --err-bg: #fbe5e5;
+  --focus: #e2a62b;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --navy: #6f93e6;
+    --navy-deep: #0d1730;
+    --gold: #f0bb4c;
+    --bg: #0f1626;
+    --card: #17213a;
+    --ink: #e8edf8;
+    --muted: #9eabc4;
+    --line: #2a3857;
+    --ok: #5ed39b;
+    --ok-bg: #15382b;
+    --warn: #f4b261;
+    --warn-bg: #3b2a12;
+    --err: #ff9b9b;
+    --err-bg: #3d1b1b;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+header {
+  background: #14306b;
+  color: #fff;
+  border-bottom: 5px solid #e2a62b;
+}
+.head {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 18px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.crest {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #e2a62b;
+  color: #14306b;
+  display: grid;
+  place-items: center;
+  font: 800 1.1rem Georgia, serif;
+  flex: none;
+}
+.head h1 {
+  margin: 0;
+  font: 700 1.25rem Georgia, "Times New Roman", serif;
+}
+.head p {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+.motto {
+  margin-left: auto;
+  font: italic 1rem Georgia, serif;
+  color: #e2a62b;
+  text-align: right;
+}
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px;
+}
+section.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--navy);
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+h2 {
+  font: 700 1.1rem Georgia, "Times New Roman", serif;
+  margin: 0 0 4px;
+  color: var(--navy);
+}
+.hint {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+label {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin: 12px 0 4px;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  font: inherit;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg);
+  color: var(--ink);
+}
+textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+button {
+  margin-top: 14px;
+  padding: 10px 18px;
+  font: inherit;
+  font-weight: 600;
+  border: 0;
+  border-radius: 4px;
+  background: #14306b;
+  color: #fff;
+  cursor: pointer;
+}
+button:hover {
+  background: #0d2150;
+}
+button.gold {
+  background: #e2a62b;
+  color: #14306b;
+}
+button.gold:hover {
+  background: #cf951f;
+}
+button.ghost {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  margin: 0;
+}
+:is(button, input, select, textarea, .tab):focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+.user {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+}
+.user small {
+  color: var(--muted);
+  display: block;
+}
+.tabs {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  margin-bottom: 12px;
+  border-bottom: 2px solid var(--line);
+}
+.tab {
+  margin: 0;
+  background: transparent;
+  color: var(--muted);
+  border-radius: 4px 4px 0 0;
+  padding: 10px 14px;
+  white-space: nowrap;
+  border-bottom: 3px solid transparent;
+}
+.tab:hover {
+  background: var(--card);
+  color: var(--ink);
+}
+.tab[aria-selected="true"] {
+  color: var(--navy);
+  border-bottom-color: #e2a62b;
+  background: var(--card);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--line);
+}
+.row:last-child {
+  border-bottom: 0;
+}
+.who {
+  flex: 1;
+}
+.who small {
+  display: block;
+  color: var(--muted);
+}
+.row select {
+  width: 130px;
+}
+.quick {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 8px 0;
+}
+.quick button {
+  margin: 0;
+  padding: 6px 12px;
+  font-size: 0.85rem;
+}
+.table-wrap {
+  overflow-x: auto;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+th,
+td {
+  text-align: left;
+  padding: 9px 8px;
+  border-bottom: 1px solid var(--line);
+  vertical-align: top;
+}
+th {
+  color: var(--navy);
+  font-size: 0.82rem;
+}
+.bar {
+  height: 8px;
+  background: var(--line);
+  border-radius: 4px;
+  min-width: 70px;
+  overflow: hidden;
+  margin-top: 4px;
+}
+.bar i {
+  display: block;
+  height: 100%;
+  background: var(--ok);
+}
+.bar i.low {
+  background: #e2a62b;
+}
+.pill {
+  padding: 2px 9px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.pill.ok {
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.pill.low {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+#msg {
+  padding: 11px 14px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  display: none;
+  font-weight: 500;
+}
+#msg.ok {
+  display: block;
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+#msg.err {
+  display: block;
+  background: var(--err-bg);
+  color: var(--err);
+}
+.empty {
+  color: var(--muted);
+  padding: 8px 0;
+}
+.stats {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+.stat {
+  flex: 1;
+  min-width: 120px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 10px 12px;
+}
+.stat b {
+  display: block;
+  font: 700 1.4rem Georgia, serif;
+  color: var(--navy);
+}
+.stat span {
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.8rem;
+  padding: 8px 16px 28px;
+}
+.hidden {
+  display: none !important;
+}
+@media (max-width: 560px) {
+  .motto {
+    display: none;
+  }
+  .row {
+    flex-wrap: wrap;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

@@ -1,365 +1,550 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MUST Class Attendance | Academic Registrar</title>
-<style>
-  /* MUST-inspired theme: navy and gold. Change these variables to re-colour the whole app. */
-  :root {
-    --navy: #14306b; --navy-deep: #0d2150; --gold: #e2a62b;
-    --bg: #f3f5fa; --card: #ffffff; --ink: #172033; --muted: #5a6577; --line: #d7ddea;
-    --ok: #17724a; --ok-bg: #e2f3ea; --warn: #9a4b05; --warn-bg: #fdefd8;
-    --err: #a12525; --err-bg: #fbe5e5; --focus: #e2a62b;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root { --navy: #6f93e6; --navy-deep: #0d1730; --gold: #f0bb4c;
-      --bg: #0f1626; --card: #17213a; --ink: #e8edf8; --muted: #9eabc4; --line: #2a3857;
-      --ok: #5ed39b; --ok-bg: #15382b; --warn: #f4b261; --warn-bg: #3b2a12;
-      --err: #ff9b9b; --err-bg: #3d1b1b; }
-  }
-  * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--ink);
-    font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-  header { background: #14306b; color: #fff; border-bottom: 5px solid #e2a62b; }
-  .head { max-width: 860px; margin: 0 auto; padding: 18px 16px; display: flex; align-items: center; gap: 14px; }
-  .crest { width: 46px; height: 46px; border-radius: 50%; background: #e2a62b; color: #14306b;
-    display: grid; place-items: center; font: 800 1.1rem Georgia, serif; flex: none; }
-  .head h1 { margin: 0; font: 700 1.25rem Georgia, "Times New Roman", serif; }
-  .head p { margin: 0; font-size: .85rem; opacity: .85; }
-  .motto { margin-left: auto; font: italic 1rem Georgia, serif; color: #e2a62b; text-align: right; }
-  main { max-width: 860px; margin: 0 auto; padding: 16px; }
-  section.card { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--navy);
-    border-radius: 6px; padding: 16px; margin-bottom: 16px; }
-  h2 { font: 700 1.1rem Georgia, "Times New Roman", serif; margin: 0 0 4px; color: var(--navy); }
-  .hint { margin: 0 0 8px; color: var(--muted); font-size: .9rem; }
-  label { display: block; font-size: .85rem; color: var(--muted); margin: 12px 0 4px; }
-  input, select, textarea { width: 100%; padding: 10px; font: inherit; border: 1px solid var(--line);
-    border-radius: 4px; background: var(--bg); color: var(--ink); }
-  textarea { min-height: 70px; resize: vertical; }
-  button { margin-top: 14px; padding: 10px 18px; font: inherit; font-weight: 600; border: 0; border-radius: 4px;
-    background: #14306b; color: #fff; cursor: pointer; }
-  button:hover { background: #0d2150; }
-  button.gold { background: #e2a62b; color: #14306b; } button.gold:hover { background: #cf951f; }
-  button.ghost { background: transparent; color: var(--ink); border: 1px solid var(--line); margin: 0; }
-  :is(button, input, select, textarea, .tab):focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
-  .user { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-  .user small { color: var(--muted); display: block; }
-  .tabs { display: flex; gap: 4px; overflow-x: auto; margin-bottom: 12px; border-bottom: 2px solid var(--line); }
-  .tab { margin: 0; background: transparent; color: var(--muted); border-radius: 4px 4px 0 0; padding: 10px 14px;
-    white-space: nowrap; border-bottom: 3px solid transparent; }
-  .tab:hover { background: var(--card); color: var(--ink); }
-  .tab[aria-selected="true"] { color: var(--navy); border-bottom-color: #e2a62b; background: var(--card); }
-  .row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--line); }
-  .row:last-child { border-bottom: 0; }
-  .who { flex: 1; } .who small { display: block; color: var(--muted); }
-  .row select { width: 130px; }
-  .quick { display: flex; gap: 8px; flex-wrap: wrap; margin: 8px 0; }
-  .quick button { margin: 0; padding: 6px 12px; font-size: .85rem; }
-  .table-wrap { overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; font-size: .92rem; }
-  th, td { text-align: left; padding: 9px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
-  th { color: var(--navy); font-size: .82rem; }
-  .bar { height: 8px; background: var(--line); border-radius: 4px; min-width: 70px; overflow: hidden; margin-top: 4px; }
-  .bar i { display: block; height: 100%; background: var(--ok); }
-  .bar i.low { background: #e2a62b; }
-  .pill { padding: 2px 9px; border-radius: 10px; font-size: .8rem; font-weight: 600; white-space: nowrap; }
-  .pill.ok { background: var(--ok-bg); color: var(--ok); }
-  .pill.low { background: var(--warn-bg); color: var(--warn); }
-  #msg { padding: 11px 14px; border-radius: 4px; margin-bottom: 16px; display: none; font-weight: 500; }
-  #msg.ok { display: block; background: var(--ok-bg); color: var(--ok); }
-  #msg.err { display: block; background: var(--err-bg); color: var(--err); }
-  .empty { color: var(--muted); padding: 8px 0; }
-  .stats { display: flex; gap: 12px; flex-wrap: wrap; margin: 10px 0; }
-  .stat { flex: 1; min-width: 120px; background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 10px 12px; }
-  .stat b { display: block; font: 700 1.4rem Georgia, serif; color: var(--navy); }
-  .stat span { font-size: .8rem; color: var(--muted); }
-  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 8px 16px 28px; }
-  .hidden { display: none !important; }
-  @media (max-width: 560px) { .motto { display: none; } .row { flex-wrap: wrap; } }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-</style>
-</head>
-<body>
-<header>
-  <div class="head">
-    <div class="crest" aria-hidden="true">M</div>
-    <div>
-      <h1>Class Attendance</h1>
-      <p>Office of the Academic Registrar, Mbarara University of Science and Technology</p>
-    </div>
-    <div class="motto">Succeed We Must</div>
-  </div>
-</header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>MUST Class Attendance | Academic Registrar</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <div class="head">
+        <div class="crest" aria-hidden="true">M</div>
+        <div>
+          <h1>Class Attendance</h1>
+          <p>
+            Office of the Academic Registrar, Mbarara University of Science and
+            Technology
+          </p>
+        </div>
+        <div class="motto">Succeed We Must</div>
+      </div>
+    </header>
 
-<main>
-  <div id="msg" role="status" aria-live="polite"></div>
+    <main>
+      <div id="msg" role="status" aria-live="polite"></div>
 
-  <section class="card" id="loginBox">
-    <h2>Log in</h2>
-    <p class="hint">Students: your registration number (e.g. 2025/BSE/173/PS) is your username and also your first password. You can change both after logging in.</p>
-    <label for="username">Username</label>
-    <input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Registration number or your own username">
-    <label for="password">Password</label>
-    <input id="password" type="password" autocomplete="current-password">
-    <button id="loginBtn">Log in</button>
-  </section>
+      <section class="card" id="loginBox">
+        <h2>Log in</h2>
+        <p class="hint">
+          Students: your registration number (e.g. 2025/BSE/173/PS) is your
+          username and also your first password. You can change both after
+          logging in.
+        </p>
+        <label for="username">Username</label>
+        <input
+          id="username"
+          type="text"
+          autocomplete="username"
+          autocapitalize="none"
+          spellcheck="false"
+          placeholder="Registration number or your own username"
+        />
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" />
+        <button id="loginBtn">Log in</button>
+      </section>
 
-  <div id="app" class="hidden">
-    <section class="card">
-      <div class="user">
-        <div><strong id="who"></strong><small id="whoSub"></small></div>
-        <div style="display:flex;gap:8px">
-          <button class="ghost" id="accountBtn">My account</button>
-          <button class="ghost" id="logoutBtn">Log out</button>
+      <div id="app" class="hidden">
+        <section class="card">
+          <div class="user">
+            <div><strong id="who"></strong><small id="whoSub"></small></div>
+            <div style="display: flex; gap: 8px">
+              <button class="ghost" id="accountBtn">My account</button>
+              <button class="ghost" id="logoutBtn">Log out</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ACCOUNT (students and lecturers) -->
+        <section class="card hidden" id="accountCard">
+          <h2>My account</h2>
+          <div class="stats" id="details"></div>
+          <div
+            id="defaultWarn"
+            class="hint hidden"
+            style="color: var(--warn); font-weight: 600"
+          >
+            You are still using your registration number as your password.
+            Please set a new password below.
+          </div>
+          <p class="hint">
+            Change your username, your password, or both. Leave a field empty to
+            keep it as it is. Your current password is always required.
+          </p>
+          <label for="newUsername">New username</label>
+          <input
+            id="newUsername"
+            type="text"
+            autocomplete="off"
+            autocapitalize="none"
+            spellcheck="false"
+            placeholder="3 to 40 characters: letters, numbers and . _ / -"
+          />
+          <label for="newPassword">New password</label>
+          <input
+            id="newPassword"
+            type="password"
+            autocomplete="new-password"
+            placeholder="At least 6 characters"
+          />
+          <label for="newPassword2">Confirm new password</label>
+          <input
+            id="newPassword2"
+            type="password"
+            autocomplete="new-password"
+          />
+          <label for="currentPassword">Current password</label>
+          <input
+            id="currentPassword"
+            type="password"
+            autocomplete="current-password"
+          />
+          <button class="gold" id="saveAccountBtn">Save changes</button>
+        </section>
+
+        <!-- LECTURER -->
+        <div id="lecturerView" class="hidden">
+          <section class="card">
+            <h2>Select course</h2>
+            <select id="courseSelect" aria-label="Course"></select>
+          </section>
+
+          <div class="tabs" role="tablist">
+            <button class="tab" role="tab" data-tab="mark" aria-selected="true">
+              Mark attendance
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              data-tab="sessions"
+              aria-selected="false"
+            >
+              Open session
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              data-tab="report"
+              aria-selected="false"
+            >
+              Report
+            </button>
+            <button
+              class="tab"
+              role="tab"
+              data-tab="course"
+              aria-selected="false"
+            >
+              New course
+            </button>
+          </div>
+
+          <section class="card" data-panel="mark">
+            <h2>Mark attendance</h2>
+            <p class="hint">
+              Pick a session, set each student's status, then save. Each student
+              can be marked once per session.
+            </p>
+            <label for="sessionSelect">Session</label>
+            <select id="sessionSelect"></select>
+            <div class="quick">
+              <button class="ghost" data-all="present">All present</button>
+              <button class="ghost" data-all="absent">All absent</button>
+            </div>
+            <div id="roster"></div>
+            <button class="gold" id="saveAttBtn">Save attendance</button>
+          </section>
+
+          <section class="card hidden" data-panel="sessions">
+            <h2>Open a class session</h2>
+            <p class="hint">
+              Create one session for each lecture before taking attendance.
+            </p>
+            <label for="topic">Topic</label>
+            <input
+              id="topic"
+              placeholder="e.g. Express routing and validation"
+            />
+            <label for="date">Date</label>
+            <input id="date" type="date" />
+            <button id="createSessionBtn">Open session</button>
+          </section>
+
+          <section class="card hidden" data-panel="report">
+            <h2>Course report</h2>
+            <p class="hint">
+              Students under the attendance threshold may not be eligible for
+              exams.
+            </p>
+            <button id="reportBtn" style="margin-top: 0">Load report</button>
+            <div id="report"></div>
+          </section>
+
+          <section class="card hidden" data-panel="course">
+            <h2>Create a course</h2>
+            <p class="hint">
+              Enrol students by registration number, separated by commas.
+            </p>
+            <label for="cCode">Course code</label>
+            <input id="cCode" placeholder="SWE2106" />
+            <label for="cName">Course name</label>
+            <input
+              id="cName"
+              placeholder="Internet Technologies and Web Design"
+            />
+            <label for="cRegs">Student registration numbers</label>
+            <textarea id="cRegs">
+2025/BSE/173/PS, 2025/BSE/044/PS, 2025/BSE/204/PS, 2025/BSE/094/PS, 2025/BSE/110/PS, 2025/BSE/001, 2025/BSE/003, 2025/BSE/168/PS, 2025/BSE/004, 2025/BSE/157/PS, 2025/BSE/242/PS</textarea
+            >
+            <button id="createCourseBtn">Create course</button>
+          </section>
+        </div>
+
+        <!-- STUDENT -->
+        <div id="studentView" class="hidden">
+          <section class="card">
+            <h2>My attendance</h2>
+            <p class="hint">
+              You need the required percentage in each course to sit its exam.
+            </p>
+            <div id="myAttendance"></div>
+          </section>
         </div>
       </div>
-    </section>
+    </main>
 
-    <!-- ACCOUNT (students and lecturers) -->
-    <section class="card hidden" id="accountCard">
-      <h2>My account</h2>
-      <div class="stats" id="details"></div>
-      <div id="defaultWarn" class="hint hidden" style="color:var(--warn);font-weight:600">You are still using your registration number as your password. Please set a new password below.</div>
-      <p class="hint">Change your username, your password, or both. Leave a field empty to keep it as it is. Your current password is always required.</p>
-      <label for="newUsername">New username</label>
-      <input id="newUsername" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="3 to 40 characters: letters, numbers and . _ / -">
-      <label for="newPassword">New password</label>
-      <input id="newPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters">
-      <label for="newPassword2">Confirm new password</label>
-      <input id="newPassword2" type="password" autocomplete="new-password">
-      <label for="currentPassword">Current password</label>
-      <input id="currentPassword" type="password" autocomplete="current-password">
-      <button class="gold" id="saveAccountBtn">Save changes</button>
-    </section>
+    <footer>
+      Mbarara University of Science and Technology, P.O. Box 1410, Mbarara,
+      Uganda
+    </footer>
 
-    <!-- LECTURER -->
-    <div id="lecturerView" class="hidden">
-      <section class="card">
-        <h2>Select course</h2>
-        <select id="courseSelect" aria-label="Course"></select>
-      </section>
+    <script>
+      // Works when served by Express (http://localhost:3000) and also when the file is opened another way.
+      const API =
+        location.protocol === "file:" ||
+        (location.port &&
+          location.port !== "3000" &&
+          location.hostname === "localhost" &&
+          !location.pathname.startsWith("/api"))
+          ? "http://localhost:3000/api"
+          : "/api";
+      let token = null,
+        user = null,
+        courses = [];
+      const $ = (id) => document.getElementById(id);
+      const esc = (s) =>
+        String(s ?? "").replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            }[c])
+        );
 
-      <div class="tabs" role="tablist">
-        <button class="tab" role="tab" data-tab="mark" aria-selected="true">Mark attendance</button>
-        <button class="tab" role="tab" data-tab="sessions" aria-selected="false">Open session</button>
-        <button class="tab" role="tab" data-tab="report" aria-selected="false">Report</button>
-        <button class="tab" role="tab" data-tab="course" aria-selected="false">New course</button>
-      </div>
+      function say(text, type) {
+        const m = $("msg");
+        m.textContent = text;
+        m.className = type;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      function clearMsg() {
+        $("msg").className = "";
+      }
 
-      <section class="card" data-panel="mark">
-        <h2>Mark attendance</h2>
-        <p class="hint">Pick a session, set each student's status, then save. Each student can be marked once per session.</p>
-        <label for="sessionSelect">Session</label>
-        <select id="sessionSelect"></select>
-        <div class="quick">
-          <button class="ghost" data-all="present">All present</button>
-          <button class="ghost" data-all="absent">All absent</button>
-        </div>
-        <div id="roster"></div>
-        <button class="gold" id="saveAttBtn">Save attendance</button>
-      </section>
+      async function api(path, method = "GET", body) {
+        const res = await fetch(API + path, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: "Bearer " + token } : {}),
+          },
+          body: body ? JSON.stringify(body) : undefined,
+        });
+        let data;
+        try {
+          data = await res.json();
+        } catch (e) {
+          throw new Error(
+            'The server did not return JSON. Make sure "npm start" is running and open http://localhost:3000 in your browser.'
+          );
+        }
+        if (!res.ok) {
+          const detail = data.errors
+            ? " " + data.errors.map((e) => e.message).join(" ")
+            : "";
+          throw new Error((data.message || "Request failed.") + detail);
+        }
+        return data;
+      }
 
-      <section class="card hidden" data-panel="sessions">
-        <h2>Open a class session</h2>
-        <p class="hint">Create one session for each lecture before taking attendance.</p>
-        <label for="topic">Topic</label>
-        <input id="topic" placeholder="e.g. Express routing and validation">
-        <label for="date">Date</label>
-        <input id="date" type="date">
-        <button id="createSessionBtn">Open session</button>
-      </section>
+      function bar(pct, low) {
+        return `<div class="bar"><i class="${
+          low ? "low" : ""
+        }" style="width:${Math.min(pct, 100)}%"></i></div>`;
+      }
+      function pill(low, threshold) {
+        return `<span class="pill ${low ? "low" : "ok"}">${
+          low ? "Below " + threshold + "%" : "Eligible"
+        }</span>`;
+      }
 
-      <section class="card hidden" data-panel="report">
-        <h2>Course report</h2>
-        <p class="hint">Students under the attendance threshold may not be eligible for exams.</p>
-        <button id="reportBtn" style="margin-top:0">Load report</button>
-        <div id="report"></div>
-      </section>
+      /* ---------- Login ---------- */
+      $("loginBtn").onclick = async () => {
+        try {
+          const d = await api("/auth/login", "POST", {
+            username: $("username").value,
+            password: $("password").value,
+          });
+          token = d.token;
+          user = d.user;
+          clearMsg();
+          $("loginBox").classList.add("hidden");
+          $("app").classList.remove("hidden");
+          $("password").value = "";
+          renderUser();
+          if (user.passwordIsDefault) {
+            toggleAccount(true);
+            say(
+              "Welcome, " +
+                user.name +
+                ". Please set a new password for your account.",
+              "err"
+            );
+          }
+          if (user.role === "lecturer") {
+            $("lecturerView").classList.remove("hidden");
+            await loadCourses();
+          } else {
+            $("studentView").classList.remove("hidden");
+            await loadMine();
+          }
+        } catch (e) {
+          say(e.message, "err");
+        }
+      };
+      $("logoutBtn").onclick = () => location.reload();
+      ["username", "password"].forEach((id) =>
+        $(id).addEventListener("keydown", (e) => {
+          if (e.key === "Enter") $("loginBtn").click();
+        })
+      );
 
-      <section class="card hidden" data-panel="course">
-        <h2>Create a course</h2>
-        <p class="hint">Enrol students by registration number, separated by commas.</p>
-        <label for="cCode">Course code</label>
-        <input id="cCode" placeholder="SWE2106">
-        <label for="cName">Course name</label>
-        <input id="cName" placeholder="Internet Technologies and Web Design">
-        <label for="cRegs">Student registration numbers</label>
-        <textarea id="cRegs">2025/BSE/173/PS, 2025/BSE/044/PS, 2025/BSE/204/PS, 2025/BSE/094/PS, 2025/BSE/110/PS, 2025/BSE/001, 2025/BSE/003, 2025/BSE/168/PS, 2025/BSE/004, 2025/BSE/157/PS, 2025/BSE/242/PS</textarea>
-        <button id="createCourseBtn">Create course</button>
-      </section>
-    </div>
+      /* ---------- Account ---------- */
+      function renderUser() {
+        $("who").textContent = user.name;
+        $("whoSub").textContent =
+          user.role === "lecturer"
+            ? "Lecturer \u00b7 " + user.username
+            : "Student \u00b7 " + (user.regNumber || "");
+        const items = [
+          ["Name", user.name],
+          ["Role", user.role === "lecturer" ? "Lecturer" : "Student"],
+        ];
+        if (user.regNumber) items.push(["Registration number", user.regNumber]);
+        items.push(["Username", user.username]);
+        $("details").innerHTML = items
+          .map(
+            ([k, v]) =>
+              `<div class="stat"><b style="font-size:1rem;word-break:break-all">${esc(
+                v
+              )}</b><span>${k}</span></div>`
+          )
+          .join("");
+        $("defaultWarn").classList.toggle("hidden", !user.passwordIsDefault);
+      }
+      function toggleAccount(force) {
+        const open =
+          force === undefined
+            ? $("accountCard").classList.contains("hidden")
+            : force;
+        $("accountCard").classList.toggle("hidden", !open);
+        if (open)
+          $("accountCard").scrollIntoView({
+            behavior: "smooth",
+            block: "start",
+          });
+      }
+      $("accountBtn").onclick = () => toggleAccount();
+      $("saveAccountBtn").onclick = async () => {
+        try {
+          const newUsername = $("newUsername").value.trim(),
+            newPassword = $("newPassword").value;
+          if (newPassword && newPassword !== $("newPassword2").value)
+            throw new Error("The two new passwords do not match.");
+          const d = await api("/auth/account", "PUT", {
+            currentPassword: $("currentPassword").value,
+            newUsername,
+            newPassword,
+          });
+          user = { ...user, ...d.user };
+          [
+            "newUsername",
+            "newPassword",
+            "newPassword2",
+            "currentPassword",
+          ].forEach((id) => ($(id).value = ""));
+          renderUser();
+          say(d.message + " Use the new details next time you log in.", "ok");
+        } catch (e) {
+          say(e.message, "err");
+        }
+      };
 
-    <!-- STUDENT -->
-    <div id="studentView" class="hidden">
-      <section class="card">
-        <h2>My attendance</h2>
-        <p class="hint">You need the required percentage in each course to sit its exam.</p>
-        <div id="myAttendance"></div>
-      </section>
-    </div>
-  </div>
-</main>
+      /* ---------- Tabs ---------- */
+      document
+        .querySelectorAll(".tab")
+        .forEach((t) => (t.onclick = () => showTab(t.dataset.tab)));
+      function showTab(name) {
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) =>
+            t.setAttribute("aria-selected", t.dataset.tab === name)
+          );
+        document
+          .querySelectorAll("[data-panel]")
+          .forEach((p) =>
+            p.classList.toggle("hidden", p.dataset.panel !== name)
+          );
+        clearMsg();
+      }
 
-<footer>Mbarara University of Science and Technology, P.O. Box 1410, Mbarara, Uganda</footer>
+      /* ---------- Lecturer ---------- */
+      async function loadCourses(selectId) {
+        const d = await api("/courses");
+        courses = d.data;
+        $("courseSelect").innerHTML = courses.length
+          ? courses
+              .map(
+                (c) =>
+                  `<option value="${esc(c._id)}">${esc(c.code)} ${esc(
+                    c.name
+                  )}</option>`
+              )
+              .join("")
+          : '<option value="">No courses yet. Open the New course tab.</option>';
+        if (selectId) $("courseSelect").value = selectId;
+        $("courseSelect").onchange = loadSessions;
+        if (!courses.length) showTab("course");
+        await loadSessions();
+      }
 
-<script>
-// Works when served by Express (http://localhost:3000) and also when the file is opened another way.
-const API = (location.protocol === 'file:' || (location.port && location.port !== '3000' && location.hostname === 'localhost' && !location.pathname.startsWith('/api')))
-  ? 'http://localhost:3000/api' : '/api';
-let token = null, user = null, courses = [];
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      async function loadSessions() {
+        const id = $("courseSelect").value;
+        $("report").innerHTML = "";
+        if (!id) {
+          $("sessionSelect").innerHTML = "";
+          $("roster").innerHTML = "";
+          return;
+        }
+        const d = await api(`/courses/${id}/sessions`);
+        $("sessionSelect").innerHTML = d.data.length
+          ? d.data
+              .map(
+                (s) =>
+                  `<option value="${esc(s._id)}">${new Date(
+                    s.date
+                  ).toLocaleDateString()} - ${esc(s.topic)}</option>`
+              )
+              .join("")
+          : '<option value="">No sessions yet. Open one first.</option>';
+        renderRoster();
+      }
 
-function say(text, type) { const m = $('msg'); m.textContent = text; m.className = type; window.scrollTo({ top: 0, behavior: 'smooth' }); }
-function clearMsg() { $('msg').className = ''; }
-
-async function api(path, method = 'GET', body) {
-  const res = await fetch(API + path, {
-    method,
-    headers: { 'Content-Type': 'application/json', ...(token ? { Authorization: 'Bearer ' + token } : {}) },
-    body: body ? JSON.stringify(body) : undefined
-  });
-  let data;
-  try { data = await res.json(); }
-  catch (e) { throw new Error('The server did not return JSON. Make sure "npm start" is running and open http://localhost:3000 in your browser.'); }
-  if (!res.ok) {
-    const detail = data.errors ? ' ' + data.errors.map((e) => e.message).join(' ') : '';
-    throw new Error((data.message || 'Request failed.') + detail);
-  }
-  return data;
-}
-
-function bar(pct, low) { return `<div class="bar"><i class="${low ? 'low' : ''}" style="width:${Math.min(pct, 100)}%"></i></div>`; }
-function pill(low, threshold) {
-  return `<span class="pill ${low ? 'low' : 'ok'}">${low ? 'Below ' + threshold + '%' : 'Eligible'}</span>`;
-}
-
-/* ---------- Login ---------- */
-$('loginBtn').onclick = async () => {
-  try {
-    const d = await api('/auth/login', 'POST', { username: $('username').value, password: $('password').value });
-    token = d.token; user = d.user; clearMsg();
-    $('loginBox').classList.add('hidden'); $('app').classList.remove('hidden');
-    $('password').value = '';
-    renderUser();
-    if (user.passwordIsDefault) { toggleAccount(true); say('Welcome, ' + user.name + '. Please set a new password for your account.', 'err'); }
-    if (user.role === 'lecturer') { $('lecturerView').classList.remove('hidden'); await loadCourses(); }
-    else { $('studentView').classList.remove('hidden'); await loadMine(); }
-  } catch (e) { say(e.message, 'err'); }
-};
-$('logoutBtn').onclick = () => location.reload();
-['username', 'password'].forEach((id) => $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') $('loginBtn').click(); }));
-
-/* ---------- Account ---------- */
-function renderUser() {
-  $('who').textContent = user.name;
-  $('whoSub').textContent = user.role === 'lecturer' ? 'Lecturer \u00b7 ' + user.username : 'Student \u00b7 ' + (user.regNumber || '');
-  const items = [['Name', user.name], ['Role', user.role === 'lecturer' ? 'Lecturer' : 'Student']];
-  if (user.regNumber) items.push(['Registration number', user.regNumber]);
-  items.push(['Username', user.username]);
-  $('details').innerHTML = items.map(([k, v]) => `<div class="stat"><b style="font-size:1rem;word-break:break-all">${esc(v)}</b><span>${k}</span></div>`).join('');
-  $('defaultWarn').classList.toggle('hidden', !user.passwordIsDefault);
-}
-function toggleAccount(force) {
-  const open = force === undefined ? $('accountCard').classList.contains('hidden') : force;
-  $('accountCard').classList.toggle('hidden', !open);
-  if (open) $('accountCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-$('accountBtn').onclick = () => toggleAccount();
-$('saveAccountBtn').onclick = async () => {
-  try {
-    const newUsername = $('newUsername').value.trim(), newPassword = $('newPassword').value;
-    if (newPassword && newPassword !== $('newPassword2').value) throw new Error('The two new passwords do not match.');
-    const d = await api('/auth/account', 'PUT', { currentPassword: $('currentPassword').value, newUsername, newPassword });
-    user = { ...user, ...d.user };
-    ['newUsername', 'newPassword', 'newPassword2', 'currentPassword'].forEach((id) => $(id).value = '');
-    renderUser();
-    say(d.message + ' Use the new details next time you log in.', 'ok');
-  } catch (e) { say(e.message, 'err'); }
-};
-
-/* ---------- Tabs ---------- */
-document.querySelectorAll('.tab').forEach((t) => t.onclick = () => showTab(t.dataset.tab));
-function showTab(name) {
-  document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', t.dataset.tab === name));
-  document.querySelectorAll('[data-panel]').forEach((p) => p.classList.toggle('hidden', p.dataset.panel !== name));
-  clearMsg();
-}
-
-/* ---------- Lecturer ---------- */
-async function loadCourses(selectId) {
-  const d = await api('/courses');
-  courses = d.data;
-  $('courseSelect').innerHTML = courses.length
-    ? courses.map((c) => `<option value="${esc(c._id)}">${esc(c.code)} ${esc(c.name)}</option>`).join('')
-    : '<option value="">No courses yet. Open the New course tab.</option>';
-  if (selectId) $('courseSelect').value = selectId;
-  $('courseSelect').onchange = loadSessions;
-  if (!courses.length) showTab('course');
-  await loadSessions();
-}
-
-async function loadSessions() {
-  const id = $('courseSelect').value;
-  $('report').innerHTML = '';
-  if (!id) { $('sessionSelect').innerHTML = ''; $('roster').innerHTML = ''; return; }
-  const d = await api(`/courses/${id}/sessions`);
-  $('sessionSelect').innerHTML = d.data.length
-    ? d.data.map((s) => `<option value="${esc(s._id)}">${new Date(s.date).toLocaleDateString()} - ${esc(s.topic)}</option>`).join('')
-    : '<option value="">No sessions yet. Open one first.</option>';
-  renderRoster();
-}
-
-function renderRoster() {
-  const c = courses.find((x) => x._id === $('courseSelect').value);
-  $('roster').innerHTML = c && c.students.length ? c.students.map((s) => `
+      function renderRoster() {
+        const c = courses.find((x) => x._id === $("courseSelect").value);
+        $("roster").innerHTML =
+          c && c.students.length
+            ? c.students
+                .map(
+                  (s) => `
     <div class="row" data-id="${esc(s._id)}">
       <div class="who">${esc(s.name)}<small>${esc(s.regNumber)}</small></div>
       <select aria-label="Status for ${esc(s.name)}">
         <option value="present">Present</option><option value="late">Late</option><option value="absent">Absent</option>
       </select>
-    </div>`).join('') : '<p class="empty">No students enrolled in this course.</p>';
-}
+    </div>`
+                )
+                .join("")
+            : '<p class="empty">No students enrolled in this course.</p>';
+      }
 
-document.querySelectorAll('[data-all]').forEach((b) => b.onclick = () =>
-  document.querySelectorAll('#roster select').forEach((s) => s.value = b.dataset.all));
+      document
+        .querySelectorAll("[data-all]")
+        .forEach(
+          (b) =>
+            (b.onclick = () =>
+              document
+                .querySelectorAll("#roster select")
+                .forEach((s) => (s.value = b.dataset.all)))
+        );
 
-$('createCourseBtn').onclick = async () => {
-  try {
-    const regs = $('cRegs').value.split(',').map((r) => r.trim()).filter(Boolean);
-    const d = await api('/courses', 'POST', { code: $('cCode').value, name: $('cName').value, studentRegNumbers: regs });
-    say(`Course ${d.data.code} created.`, 'ok');
-    $('cCode').value = ''; $('cName').value = '';
-    await loadCourses(d.data._id); showTab('sessions');
-  } catch (e) { say(e.message, 'err'); }
-};
+      $("createCourseBtn").onclick = async () => {
+        try {
+          const regs = $("cRegs")
+            .value.split(",")
+            .map((r) => r.trim())
+            .filter(Boolean);
+          const d = await api("/courses", "POST", {
+            code: $("cCode").value,
+            name: $("cName").value,
+            studentRegNumbers: regs,
+          });
+          say(`Course ${d.data.code} created.`, "ok");
+          $("cCode").value = "";
+          $("cName").value = "";
+          await loadCourses(d.data._id);
+          showTab("sessions");
+        } catch (e) {
+          say(e.message, "err");
+        }
+      };
 
-$('createSessionBtn').onclick = async () => {
-  try {
-    await api('/sessions', 'POST', { courseId: $('courseSelect').value, topic: $('topic').value, date: $('date').value });
-    $('topic').value = ''; await loadSessions(); showTab('mark');
-    say('Session opened. You can now mark attendance.', 'ok');
-  } catch (e) { say(e.message, 'err'); }
-};
+      $("createSessionBtn").onclick = async () => {
+        try {
+          await api("/sessions", "POST", {
+            courseId: $("courseSelect").value,
+            topic: $("topic").value,
+            date: $("date").value,
+          });
+          $("topic").value = "";
+          await loadSessions();
+          showTab("mark");
+          say("Session opened. You can now mark attendance.", "ok");
+        } catch (e) {
+          say(e.message, "err");
+        }
+      };
 
-$('saveAttBtn').onclick = async () => {
-  try {
-    const sid = $('sessionSelect').value;
-    if (!sid) throw new Error('Open a session first.');
-    const records = [...document.querySelectorAll('#roster .row')].map((r) => ({
-      studentId: r.dataset.id, status: r.querySelector('select').value
-    }));
-    const d = await api(`/sessions/${sid}/attendance`, 'POST', { records });
-    say(d.message, 'ok');
-  } catch (e) { say(e.message, 'err'); }
-};
+      $("saveAttBtn").onclick = async () => {
+        try {
+          const sid = $("sessionSelect").value;
+          if (!sid) throw new Error("Open a session first.");
+          const records = [...document.querySelectorAll("#roster .row")].map(
+            (r) => ({
+              studentId: r.dataset.id,
+              status: r.querySelector("select").value,
+            })
+          );
+          const d = await api(`/sessions/${sid}/attendance`, "POST", {
+            records,
+          });
+          say(d.message, "ok");
+        } catch (e) {
+          say(e.message, "err");
+        }
+      };
 
-$('reportBtn').onclick = async () => {
-  try {
-    const d = await api(`/courses/${$('courseSelect').value}/report`);
-    const low = d.data.filter((r) => r.belowThreshold).length;
-    $('report').innerHTML = `
+      $("reportBtn").onclick = async () => {
+        try {
+          const d = await api(`/courses/${$("courseSelect").value}/report`);
+          const low = d.data.filter((r) => r.belowThreshold).length;
+          $("report").innerHTML =
+            `
       <div class="stats">
         <div class="stat"><b>${d.totalSessions}</b><span>Sessions held</span></div>
         <div class="stat"><b>${d.data.length}</b><span>Students</span></div>
@@ -367,29 +552,46 @@ $('reportBtn').onclick = async () => {
       </div>
       <div class="table-wrap"><table>
         <tr><th>Student</th><th>Attended</th><th>Attendance</th><th>Status</th></tr>` +
-      d.data.map((r) => `<tr>
+            d.data
+              .map(
+                (r) => `<tr>
         <td>${esc(r.name)}<br><small>${esc(r.regNumber)}</small></td>
         <td>${r.attended}/${r.totalSessions}</td>
         <td>${r.percentage}%${bar(r.percentage, r.belowThreshold)}</td>
-        <td>${pill(r.belowThreshold, d.threshold)}</td></tr>`).join('') + '</table></div>';
-  } catch (e) { say(e.message, 'err'); }
-};
+        <td>${pill(r.belowThreshold, d.threshold)}</td></tr>`
+              )
+              .join("") +
+            "</table></div>";
+        } catch (e) {
+          say(e.message, "err");
+        }
+      };
 
-/* ---------- Student ---------- */
-async function loadMine() {
-  try {
-    const d = await api(`/students/${user.id}/attendance`);
-    $('myAttendance').innerHTML = '<div class="table-wrap"><table><tr><th>Course</th><th>Attended</th><th>Attendance</th><th>Status</th></tr>' +
-      d.data.map((r) => `<tr><td>${esc(r.course.code)}<br><small>${esc(r.course.name)}</small></td>
+      /* ---------- Student ---------- */
+      async function loadMine() {
+        try {
+          const d = await api(`/students/${user.id}/attendance`);
+          $("myAttendance").innerHTML =
+            '<div class="table-wrap"><table><tr><th>Course</th><th>Attended</th><th>Attendance</th><th>Status</th></tr>' +
+            d.data
+              .map(
+                (r) => `<tr><td>${esc(r.course.code)}<br><small>${esc(
+                  r.course.name
+                )}</small></td>
         <td>${r.attended}/${r.totalSessions}</td>
         <td>${r.percentage}%${bar(r.percentage, r.belowThreshold)}</td>
-        <td>${pill(r.belowThreshold, d.threshold)}</td></tr>`).join('') + '</table></div>';
-  } catch (e) {
-    $('myAttendance').innerHTML = `<p class="empty">${esc(e.message)}</p>`;
-  }
-}
+        <td>${pill(r.belowThreshold, d.threshold)}</td></tr>`
+              )
+              .join("") +
+            "</table></div>";
+        } catch (e) {
+          $("myAttendance").innerHTML = `<p class="empty">${esc(
+            e.message
+          )}</p>`;
+        }
+      }
 
-$('date').valueAsDate = new Date();
-</script>
-</body>
+      $("date").valueAsDate = new Date();
+    </script>
+  </body>
 </html>
