@@ -45,7 +45,7 @@ Open `http://localhost:3000` for the frontend. API base: `http://localhost:3000/
 | Muhairwe Andrew | 2025/BSE/110/PS | 2025/BSE/110/PS |
 | Ainamaani Bright | 2025/BSE/001 | 2025/BSE/001 |
 | Murungi Collins | 2025/BSE/003 | 2025/BSE/003 |
-| Sserwanga Adrian Josephat | 2025/BSE/168/PS | 2025/BSE/168/PS |
+| Sserwanja Adrian Josephat | 2025/BSE/168/PS | 2025/BSE/168/PS |
 | Nahabi Simon Peter | 2025/BSE/004 | 2025/BSE/004 |
 | Rukundo Joshua | 2025/BSE/157/PS | 2025/BSE/157/PS |
 | Kwagala Everest | 2025/BSE/242/PS | 2025/BSE/242/PS |
@@ -89,7 +89,7 @@ Import `postman/must-attendance.postman_collection.json`, run the folders in ord
 | 5 | Muhairwe Andrew | 2025/BSE/110/PS | Class session routes | feature/sessions |
 | 6 | Ainamaani Bright | 2025/BSE/001 | Attendance marking and duplicate checks | feature/attendance |
 | 7 | Murungi Collins | 2025/BSE/003 | Course report and 75% threshold logic | feature/reports |
-| 8 | Sserwanga Adrian Josephat | 2025/BSE/168/PS | Student attendance endpoint and error handling | feature/student-view |
+| 8 | Sserwanja Adrian Josephat | 2025/BSE/168/PS | Student attendance endpoint and error handling | feature/student-view |
 | 9 | Nahabi Simon Peter | 2025/BSE/004 | Frontend page | feature/frontend |
 | 10 | Rukundo Joshua | 2025/BSE/157/PS | Postman collection and test data | feature/postman |
 | 11 | Kwagala Everest | 2025/BSE/242/PS | Proposal, README and presentation | feature/docs |
