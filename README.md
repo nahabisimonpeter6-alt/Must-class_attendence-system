@@ -8,7 +8,7 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 
 ## Users
 - **Lecturer:** creates courses, opens class sessions, marks attendance, views reports.
-- **Student:** views their own attendance and eligibility.
+- **Student:** views their own attendance and eligibility on the system.
 
 ## Objectives
 1. Cut the time spent taking attendance of students.
