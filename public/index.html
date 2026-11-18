@@ -97,11 +97,11 @@
 
   <section class="card" id="loginBox">
     <h2>Log in</h2>
-    <p class="hint">Use your MUST account. Demo: lecturer@must.ac.ug or brian@must.ac.ug, password123.</p>
-    <label for="email">Email</label>
-    <input id="email" type="email" value="lecturer@must.ac.ug" autocomplete="username">
+    <p class="hint">Students: your registration number (e.g. 2025/BSE/173/PS) is your username and also your first password. You can change both after logging in.</p>
+    <label for="username">Username</label>
+    <input id="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" placeholder="Registration number or your own username">
     <label for="password">Password</label>
-    <input id="password" type="password" value="password123" autocomplete="current-password">
+    <input id="password" type="password" autocomplete="current-password">
     <button id="loginBtn">Log in</button>
   </section>
 
@@ -109,8 +109,41 @@
     <section class="card">
       <div class="user">
         <div><strong id="who"></strong><small id="whoSub"></small></div>
-        <button class="ghost" id="logoutBtn">Log out</button>
+        <div style="display:flex;gap:8px">
+          <button class="ghost" id="accountBtn">My account</button>
+          <button class="ghost" id="logoutBtn">Log out</button>
+        </div>
       </div>
+    </section>
+
+    <!-- ACCOUNT (students and lecturers) -->
+    <section class="card hidden" id="accountCard">
+      <h2>My account</h2>
+      <div class="stats" id="details"></div>
+      <div id="defaultWarn" class="hint hidden" style="color:var(--warn);font-weight:600">You are still using your registration number as your password. Please set a new password below.</div>
+      <p class="hint">Change your username, your password, or both. Leave a field empty to keep it as it is. Your current password is always required.</p>
+      <label for="newUsername">New username</label>
+      <input id="newUsername" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="3 to 40 characters: letters, numbers and . _ / -">
+      <label for="newPassword">New password</label>
+      <input id="newPassword" type="password" autocomplete="new-password" placeholder="At least 6 characters">
+      <label for="newPassword2">Confirm new password</label>
+      <input id="newPassword2" type="password" autocomplete="new-password">
+      <label for="currentPassword">Current password</label>
+      <button type="button" id="togglePassword"
+        aria-label="Show password"
+        style="position:absolute; right:5px; top:3px;
+               background:transparent; border:none;
+               cursor:pointer; padding:6px;">
+  <svg id="eyeIcon" xmlns="http://www.w3.org/2000/svg"
+       width="20" height="20" viewBox="0 0 24 24"
+       fill="none" stroke="currentColor"
+       stroke-width="2" stroke-linecap="round"
+       stroke-linejoin="round">
+    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+    <circle cx="12" cy="12" r="3"/>
+  </svg>
+</button>
+      <button class="gold" id="saveAccountBtn">Save changes</button>
     </section>
 
     <!-- LECTURER -->
@@ -165,7 +198,7 @@
         <label for="cName">Course name</label>
         <input id="cName" placeholder="Internet Technologies and Web Design">
         <label for="cRegs">Student registration numbers</label>
-        <textarea id="cRegs">2023/BSE/001, 2023/BSE/002, 2023/BSE/003</textarea>
+        <textarea id="cRegs">2025/BSE/173/PS, 2025/BSE/044/PS, 2025/BSE/204/PS, 2025/BSE/094/PS, 2025/BSE/110/PS, 2025/BSE/001, 2025/BSE/003, 2025/BSE/168/PS, 2025/BSE/004, 2025/BSE/157/PS, 2025/BSE/242/PS</textarea>
         <button id="createCourseBtn">Create course</button>
       </section>
     </div>
@@ -189,6 +222,28 @@ const API = (location.protocol === 'file:' || (location.port && location.port !=
   ? 'http://localhost:3000/api' : '/api';
 let token = null, user = null, courses = [];
 const $ = (id) => document.getElementById(id);
+  $('togglePassword').addEventListener('click',()=>{
+ $('togglePassword').addEventListener('click', () => {
+  const password = $('password');
+  const button = $('togglePassword');
+  const icon = $('eyeIcon');
+
+  const isHidden = password.type === 'password';
+
+  password.type = isHidden ? 'text' : 'password';
+
+  button.setAttribute(
+    'aria-label',
+    isHidden ? 'Hide password' : 'Show password'
+  );
+
+  icon.innerHTML = isHidden
+    ? `<path d="M3 3l18 18M10.6 10.6a2 2 0 002.8 2.8"/>
+       <path d="M9.9 5.2A10.5 10.5 0 0112 5c6.5 0 10 7 10 7a13 13 0 01-3 3.8"/>
+       <path d="M6.2 6.2C3.5 8 2 12 2 12s3.5 7 10 7c1 0 2-.2 2.9-.5"/>`
+    : `<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+       <circle cx="12" cy="12" r="3"/>`;
+});
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
 function say(text, type) { const m = $('msg'); m.textContent = text; m.className = type; window.scrollTo({ top: 0, behavior: 'smooth' }); }
@@ -218,17 +273,46 @@ function pill(low, threshold) {
 /* ---------- Login ---------- */
 $('loginBtn').onclick = async () => {
   try {
-    const d = await api('/auth/login', 'POST', { email: $('email').value, password: $('password').value });
+    const d = await api('/auth/login', 'POST', { username: $('username').value, password: $('password').value });
     token = d.token; user = d.user; clearMsg();
     $('loginBox').classList.add('hidden'); $('app').classList.remove('hidden');
-    $('who').textContent = user.name;
-    $('whoSub').textContent = user.role === 'lecturer' ? 'Lecturer' : 'Student ' + (user.regNumber || '');
+    $('password').value = '';
+    renderUser();
+    if (user.passwordIsDefault) { toggleAccount(true); say('Welcome, ' + user.name + '. Please set a new password for your account.', 'err'); }
     if (user.role === 'lecturer') { $('lecturerView').classList.remove('hidden'); await loadCourses(); }
     else { $('studentView').classList.remove('hidden'); await loadMine(); }
   } catch (e) { say(e.message, 'err'); }
 };
 $('logoutBtn').onclick = () => location.reload();
-['email', 'password'].forEach((id) => $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') $('loginBtn').click(); }));
+['username', 'password'].forEach((id) => $(id).addEventListener('keydown', (e) => { if (e.key === 'Enter') $('loginBtn').click(); }));
+
+/* ---------- Account ---------- */
+function renderUser() {
+  $('who').textContent = user.name;
+  $('whoSub').textContent = user.role === 'lecturer' ? 'Lecturer \u00b7 ' + user.username : 'Student \u00b7 ' + (user.regNumber || '');
+  const items = [['Name', user.name], ['Role', user.role === 'lecturer' ? 'Lecturer' : 'Student']];
+  if (user.regNumber) items.push(['Registration number', user.regNumber]);
+  items.push(['Username', user.username]);
+  $('details').innerHTML = items.map(([k, v]) => `<div class="stat"><b style="font-size:1rem;word-break:break-all">${esc(v)}</b><span>${k}</span></div>`).join('');
+  $('defaultWarn').classList.toggle('hidden', !user.passwordIsDefault);
+}
+function toggleAccount(force) {
+  const open = force === undefined ? $('accountCard').classList.contains('hidden') : force;
+  $('accountCard').classList.toggle('hidden', !open);
+  if (open) $('accountCard').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+$('accountBtn').onclick = () => toggleAccount();
+$('saveAccountBtn').onclick = async () => {
+  try {
+    const newUsername = $('newUsername').value.trim(), newPassword = $('newPassword').value;
+    if (newPassword && newPassword !== $('newPassword2').value) throw new Error('The two new passwords do not match.');
+    const d = await api('/auth/account', 'PUT', { currentPassword: $('currentPassword').value, newUsername, newPassword });
+    user = { ...user, ...d.user };
+    ['newUsername', 'newPassword', 'newPassword2', 'currentPassword'].forEach((id) => $(id).value = '');
+    renderUser();
+    say(d.message + ' Use the new details next time you log in.', 'ok');
+  } catch (e) { say(e.message, 'err'); }
+};
 
 /* ---------- Tabs ---------- */
 document.querySelectorAll('.tab').forEach((t) => t.onclick = () => showTab(t.dataset.tab));
