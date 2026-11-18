@@ -9,18 +9,16 @@ SWE2106 Etivity 5. A digital class-attendance system for the Academic Registrar,
 Paper registers waste lecture time, allow proxy sign-ins, and make it hard to see who has fallen below the attendance threshold needed for exam eligibility.
 
 ## Users
-
-- **Lecturer:** creates courses, opens class sessions, marks attendance, views reports.
-- **Student:** views their own attendance and eligibility.
+- **Lecturer:** Creates courses, opens class sessions, marks attendance, and views reports.
+- **Student:** Views their own attendance records and eligibility on the system.
 
 ## Objectives
 
-1. Cut the time spent taking attendance.
-2. Keep one reliable record with no duplicate marking.
-3. Flag students below the threshold (default 75%) automatically.
+1. Reduce the time spent taking student attendance.
+2. Maintain one reliable attendance record without duplicate marking.
+3. Automatically flag students whose attendance falls below the required threshold (default 75%).
 
 ## Scope
-
 **In:** login with roles (JWT) using a username (students: registration number), changing username and password, , courses with enrolled students, class sessions, attendance marking, per-student and per-course reports, simple web page.
 **Out (future work):** QR or biometric check-in, SMS alerts, admin role, password reset by email.
 
@@ -28,8 +26,7 @@ Paper registers waste lecture time, allow proxy sign-ins, and make it hard to se
 
 Node.js, Express, MongoDB Atlas (Mongoose), JWT, express-validator, plain HTML/JS frontend, Postman.
 
-## Setup
-
+## Setup Locally
 ```bash
 git clone <repo-url> && cd must-attendance
 npm install
@@ -90,20 +87,20 @@ Responses always use `{ success, message?, data?, errors? }`. Status codes: 200/
 
 Import `postman/must-attendance.postman_collection.json`, run the folders in order 1 to 4 (or use the Collection Runner). Each request has tests, and tokens/ids are saved automatically.
 
-## Team responsibilities
+## Team Responsibilities
 
-| #   | Name                      | Reg No.         | Responsibility                                    | Branch / PR           |
-| --- | ------------------------- | --------------- | ------------------------------------------------- | --------------------- |
-| 1   | Tinyefunza Derick         | 2025/BSE/173/PS | Team Lead, GitHub repo, reviewing and merging PRs | feature/project-setup |
-| 2   | Asingura Faizal           | 2025/BSE/044/PS | Login, JWT and role middleware                    | feature/auth          |
-| 3   | Enyang Mark               | 2025/BSE/204/PS | MongoDB Atlas, models, seed script                | feature/database      |
-| 4   | Kizza Jessy Mitembo       | 2025/BSE/094/PS | Courses and enrollment routes                     | feature/courses       |
-| 5   | Muhairwe Andrew           | 2025/BSE/110/PS | Class session routes                              | feature/sessions      |
-| 6   | Ainamaani Bright          | 2025/BSE/001    | Attendance marking and duplicate checks           | feature/attendance    |
-| 7   | Murungi Collins           | 2025/BSE/003    | Course report and 75% threshold logic             | feature/reports       |
-| 8   | Sserwanga Adrian Josephat | 2025/BSE/168/PS | Student attendance endpoint and error handling    | feature/student-view  |
-| 9   | Nahabi Simon Peter        | 2025/BSE/004    | Frontend page                                     | feature/frontend      |
-| 10  | Rukundo Joshua            | 2025/BSE/157/PS | Postman collection and test data                  | feature/postman       |
-| 11  | Kwagala Everest           | 2025/BSE/242/PS | Proposal, README and presentation                 | feature/docs          |
+| # | Name | Reg No. | Responsibility | Branch / PR |
+|---|---|---|---|---|
+| 1 | Tinyefunza Derick | 2025/BSE/173/PS | Team Lead, GitHub repository management, reviewing and merging PRs | feature/project-setup |
+| 2 | Asingura Faizal | 2025/BSE/044/PS | Login, JWT authentication, and role middleware | feature/auth |
+| 3 | Enyang Mark | 2025/BSE/204/PS | MongoDB Atlas, database models, and seed script | feature/database |
+| 4 | Kizza Jessy Mitembo | 2025/BSE/094/PS | Courses and enrollment routes | feature/courses |
+| 5 | Muhairwe Andrew | 2025/BSE/110/PS | Class session routes | feature/sessions |
+| 6 | Ainamaani Bright | 2025/BSE/001 | Attendance marking and duplicate checks | feature/attendance |
+| 7 | Murungi Collins | 2025/BSE/003 | Course reports and 75% attendance threshold logic | feature/reports |
+| 8 | Sserwanga Adrian Josephat | 2025/BSE/168/PS | Student attendance endpoint and error handling | feature/student-view |
+| 9 | Nahabi Simon Peter | 2025/BSE/004 | Frontend development | feature/frontend |
+| 10 | Rukundo Joshua | 2025/BSE/157/PS | Postman collection and test data | feature/postman |
+| 11 | Kwagala Everest | 2025/BSE/242/PS | Project proposal, README documentation, and presentation | feature/docs |
 
 Each member opened a pull request from their own branch.
